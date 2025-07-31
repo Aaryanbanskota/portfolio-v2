@@ -1,0 +1,107 @@
+/* Base Styles */
+body {
+  background: url('https://wallpaperaccess.com/full/154100.jpg') no-repeat center center fixed;
+  background-size: cover;
+  font-family: 'Ubuntu', sans-serif;
+  overflow-x: hidden;
+  user-select: none;
+  transition: all 0.3s ease;
+}
+
+.window {
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+  border-radius: 8px;
+}
+
+/* Theme Variations */
+.light-mode {
+  background: url('https://wallpaperaccess.com/full/154101.jpg') no-repeat center center fixed;
+  background-size: cover;
+}
+
+.light-mode .window {
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.cyberpunk-mode {
+  background: #0f0f0f;
+  color: #0ff;
+}
+
+.cyberpunk-mode .window {
+  background: rgba(0, 0, 0, 0.9);
+  border: 1px solid #0ff;
+  color: #0ff;
+}
+
+/* Physics Effects */
+.icon-shake {
+  animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+}
+
+@keyframes shake {
+  10%, 90% { transform: translate3d(-1px, 0, 0); }
+  20%, 80% { transform: translate3d(2px, 0, 0); }
+  30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+  40%, 60% { transform: translate3d(4px, 0, 0); }
+}
+
+.icon-fall {
+  animation: fall 1s ease forwards;
+}
+
+@keyframes fall {
+  to { transform: translateY(calc(100vh - 100px)); }
+}
+
+.icon-bounce {
+  animation: bounce 0.5s ease infinite alternate;
+}
+
+@keyframes bounce {
+  from { transform: translateY(0); }
+  to { transform: translateY(-20px); }
+}
+
+/* Black Hole Effects */
+@keyframes orbit {
+  0% { transform: rotate(0deg) translateX(100px) rotate(0deg); }
+  100% { transform: rotate(360deg) translateX(100px) rotate(-360deg); }
+}
+
+.orbiting {
+  animation: orbit 3s linear infinite;
+  position: absolute;
+}
+
+/* Fluid Canvas */
+#fluid-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Achievement Badge */
+.achievement-badge {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0, 0, 0, 0.9);
+  border: 2px solid gold;
+  padding: 20px;
+  border-radius: 10px;
+  z-index: 1000;
+  display: none;
+}
+
+/* Rest of your existing CSS... */

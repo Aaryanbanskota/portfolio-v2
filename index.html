@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aaryan Banskota - Dev Intelligence Portfolio</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/phaser@3.55.2/dist/phaser.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Ubuntu+Mono:wght@400;700&family=Ubuntu:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body class="min-h-screen text-white">
+  <!-- Boot Animation -->
+  <div id="boot-animation" class="boot-animation">
+    <div class="boot-logo">
+      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#E95420">
+        <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M12 8V16" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M8 12H16" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <div class="text-orange-500 mb-4">AaryanOS v1.0</div>
+    <div class="boot-progress">
+      <div id="boot-progress-bar" class="boot-progress-bar"></div>
+    </div>
+  </div>
+
+  <!-- Login Screen -->
+  <div id="login-screen" class="login-screen" style="display: none;">
+    <h1 class="text-3xl font-bold text-orange-500 mb-8">AaryanOS Login</h1>
+    <div class="login-form">
+      <div class="mb-4">
+        <label class="block text-gray-300 mb-2">Username</label>
+        <input type="text" id="username" class="w-full p-2 bg-gray-800 rounded text-white" value="aaryan" readonly>
+      </div>
+      <div class="mb-6">
+        <label class="block text-gray-300 mb-2">Password</label>
+        <input type="password" id="password" class="w-full p-2 bg-gray-800 rounded text-white" placeholder="Enter password">
+      </div>
+      <button id="login-btn" class="w-full bg-orange-500 text-white py-2 rounded hover:bg-orange-600">Login</button>
+    </div>
+  </div>
+
+  <!-- Hamburger Menu for Mobile -->
+  <button id="hamburger" class="fixed top-4 left-4 z-30 sm:hidden p-2 bg-gray-800 rounded text-orange-500">
+    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+  </button>
+
+  <!-- Welcome Message -->
+  <div id="welcome-message" class="welcome-message window rounded-lg p-6 max-w-md w-full text-center">
+    <h1 class="text-xl font-bold text-orange-500 mb-4">Welcome to AaryanOS</h1>
+    <p class="text-gray-300 text-base">Explore my portfolio through the desktop interface!</p>
+  </div>
+
+  <!-- Desktop Icons -->
+  <div id="about-icon" class="draggable window rounded-lg p-2 text-center" style="top: 20px; left: 20px;">
+    <a href="#about" class="desktop-icon"><svg class="w-8 h-8 mx-auto" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg><p class="text-sm text-gray-300">About Me</p></a>
+  </div>
+  <!-- Other desktop icons... -->
+
+  <!-- Taskbar -->
+  <div class="taskbar fixed bottom-0 left-16 right-0 h-12 flex items-center justify-start px-4 space-x-4 z-20">
+    <!-- Taskbar items... -->
+  </div>
+
+  <!-- Context Menu -->
+  <div id="context-menu" class="context-menu">
+    <div class="context-menu-item" onclick="createNewStickyNote()">New Sticky Note</div>
+    <div class="context-menu-item" onclick="openWallpaperMenu()">Change Wallpaper</div>
+    <div class="context-menu-item" onclick="openTerminal()">Open Terminal</div>
+    <div class="context-menu-item" onclick="openSystemInfo()">System Info</div>
+    <div class="context-menu-item" onclick="openThemeEditor()">Theme Editor</div>
+    <div class="context-menu-item" onclick="startBlackHole()">Create Black Hole</div>
+  </div>
+
+  <!-- Wallpaper Menu -->
+  <div id="wallpaper-menu" class="window rounded-lg shadow-lg p-4 max-w-md w-full hidden" style="position: absolute; top: 100px; left: 100px; z-index: 100;">
+    <!-- Wallpaper menu content... -->
+  </div>
+
+  <!-- System Info Window -->
+  <div id="system-info" class="window rounded-lg shadow-lg p-4 max-w-md w-full hidden" style="position: absolute; top: 100px; left: 100px; z-index: 100;">
+    <!-- System info content... -->
+  </div>
+
+  <!-- Theme Editor -->
+  <div id="theme-editor" class="window rounded-lg shadow-lg p-4 max-w-md w-full hidden" style="position: absolute; top: 100px; left: 100px; z-index: 100;">
+    <div class="flex justify-between items-center mb-4">
+      <h1 class="text-xl font-bold text-orange-500">Theme Editor</h1>
+      <div class="flex space-x-2 window-controls">
+        <button onclick="closeWindow('theme-editor')" class="bg-red-500"></button>
+      </div>
+    </div>
+    <div class="space-y-4">
+      <div>
+        <label class="block text-gray-300 mb-2">Primary Color</label>
+        <input type="color" id="primary-color" value="#E95420" class="w-full">
+      </div>
+      <div>
+        <label class="block text-gray-300 mb-2">Background</label>
+        <input type="color" id="bg-color" value="#1a1a2e" class="w-full">
+      </div>
+      <div>
+        <label class="block text-gray-300 mb-2">Border Radius</label>
+        <input type="range" id="border-radius" min="0" max="20" value="8" class="w-full">
+      </div>
+      <div>
+        <label class="block text-gray-300 mb-2">Font</label>
+        <select id="font-select" class="w-full p-2 bg-gray-700 rounded text-white">
+          <option value="'Ubuntu', sans-serif">Ubuntu</option>
+          <option value="'Courier New', monospace">Courier New</option>
+          <option value="'Arial', sans-serif">Arial</option>
+        </select>
+      </div>
+      <button onclick="applyCustomTheme()" class="w-full bg-orange-500 text-white py-2 rounded hover:bg-orange-600">Apply Theme</button>
+      <button onclick="saveTheme()" class="w-full bg-gray-600 text-white py-2 rounded hover:bg-gray-700">Save as .skin</button>
+    </div>
+  </div>
+
+  <!-- Black Hole Effect -->
+  <div id="black-hole" class="fixed inset-0 z-50 hidden flex items-center justify-center">
+    <div class="absolute inset-0 bg-black opacity-70"></div>
+    <div class="relative z-10 text-center p-6">
+      <div id="black-hole-core" class="w-64 h-64 rounded-full bg-gradient-to-r from-purple-900 via-black to-purple-900 animate-pulse mx-auto mb-4"></div>
+      <p class="text-white text-xl mb-4">Gravitational anomaly detected!</p>
+      <button onclick="cancelBlackHole()" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Stabilize System</button>
+    </div>
+  </div>
+
+  <!-- Achievement Badge -->
+  <div id="achievement-badge" class="achievement-badge">
+    <h2 class="text-xl font-bold text-orange-500 mb-2">Achievement Unlocked!</h2>
+    <p id="achievement-text" class="text-gray-300"></p>
+  </div>
+
+  <!-- Fluid Canvas -->
+  <canvas id="fluid-canvas" class="fixed top-0 left-0 w-full h-full pointer-events-none z-0"></canvas>
+
+  <!-- Main Layout -->
+  <div class="flex min-h-screen">
+    <!-- Sidebar -->
+    <div id="sidebar" class="w-16 bg-gray-800 flex flex-col items-center py-4 space-y-6 fixed h-full z-10 sm:transform-none hidden sm:flex">
+      <!-- Sidebar icons... -->
+    </div>
+
+    <!-- Main Content -->
+    <main class="flex-1 sm:ml-16 p-4 sm:p-6 pb-16">
+      <!-- Home Section (Empty Desktop) -->
+      <section id="home" class="min-h-screen"></section>
+
+      <!-- About Me Section -->
+      <section id="about" class="min-h-screen flex items-center justify-center hidden">
+        <!-- About content... -->
+      </section>
+
+      <!-- Other sections (YouTube, Spotify, etc.)... -->
+      
+    </main>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
