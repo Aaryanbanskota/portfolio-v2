@@ -4,11 +4,271 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Aaryan Banskota - Dev Intelligence Portfolio</title>
-  <link rel="stylesheet" href="styles.css">
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/phaser@3.55.2/dist/phaser.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Ubuntu+Mono:wght@400;700&family=Ubuntu:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background: url('https://wallpaperaccess.com/full/154100.jpg') no-repeat center center fixed;
+      background-size: cover;
+      font-family: 'Ubuntu', sans-serif;
+      overflow-x: hidden;
+      user-select: none;
+    }
+    .window {
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.3s ease;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    }
+    .sidebar-icon {
+      transition: transform 0.3s ease, color 0.3s ease;
+    }
+    .sidebar-icon:hover {
+      transform: scale(1.2);
+      color: #E95420;
+    }
+    .theme-toggle {
+      cursor: pointer;
+    }
+    .light-mode {
+      background: url('https://wallpaperaccess.com/full/154101.jpg') no-repeat center center fixed;
+      background-size: cover;
+    }
+    .light-mode .window {
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid rgba(0, 0, 0, 0.1);
+    }
+    .light-mode .text-gray-300 {
+      color: #333;
+    }
+    .cyberpunk-mode {
+      background: #0f0f0f;
+      color: #0ff;
+    }
+    .cyberpunk-mode .window {
+      background: rgba(0, 0, 0, 0.9);
+      border: 1px solid #0ff;
+      color: #0ff;
+    }
+    .cyberpunk-mode .text-gray-300 {
+      color: #0ff;
+    }
+    .cyberpunk-mode .text-orange-500 {
+      color: #f0f;
+    }
+    .app-frame {
+      width: 100%;
+      height: 400px;
+      border: none;
+      border-radius: 8px;
+    }
+    .draggable {
+      position: absolute;
+      cursor: move;
+      z-index: 10;
+    }
+    .taskbar {
+      background: rgba(0, 0, 0, 0.9);
+      backdrop-filter: blur(10px);
+    }
+    .window-controls button {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      margin-left: 8px;
+    }
+    .minimized {
+      transform: scale(0);
+      opacity: 0;
+      pointer-events: none;
+    }
+    .welcome-message {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 5;
+    }
+    #sidebar {
+      transition: transform 0.3s ease;
+    }
+    #sidebar.hidden {
+      transform: translateX(-100%);
+    }
+    .resize-handle {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background: rgba(255, 255, 255, 0.3);
+      right: 0;
+      bottom: 0;
+      cursor: nwse-resize;
+    }
+    .context-menu {
+      position: absolute;
+      background: rgba(0, 0, 0, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 4px;
+      padding: 5px 0;
+      z-index: 100;
+      display: none;
+    }
+    .context-menu-item {
+      padding: 8px 15px;
+      cursor: pointer;
+    }
+    .context-menu-item:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+    .sticky-note {
+      position: absolute;
+      width: 200px;
+      height: 200px;
+      background: #ffeb3b;
+      padding: 10px;
+      box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2);
+      cursor: move;
+      z-index: 50;
+    }
+    .sticky-note textarea {
+      width: 100%;
+      height: 160px;
+      background: transparent;
+      border: none;
+      resize: none;
+      outline: none;
+      font-family: 'Ubuntu', sans-serif;
+    }
+    .sticky-note-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 5px;
+    }
+    .terminal {
+      font-family: 'Ubuntu Mono', monospace;
+      background: rgba(0, 0, 0, 0.9);
+      color: #0f0;
+      padding: 10px;
+      border-radius: 5px;
+      height: 300px;
+      overflow-y: auto;
+    }
+    .terminal-input {
+      display: flex;
+    }
+    .terminal-prompt {
+      color: #0f0;
+      margin-right: 5px;
+    }
+    .terminal-input-field {
+      background: transparent;
+      border: none;
+      color: #0f0;
+      font-family: 'Ubuntu Mono', monospace;
+      width: 100%;
+      outline: none;
+    }
+    .file-explorer-item {
+      padding: 5px;
+      cursor: pointer;
+    }
+    .file-explorer-item:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+    .game-container {
+      width: 100%;
+      height: 400px;
+      background: #000;
+    }
+    .achievement-badge {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0, 0, 0, 0.9);
+      border: 2px solid gold;
+      padding: 20px;
+      border-radius: 10px;
+      z-index: 1000;
+      display: none;
+    }
+    .login-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      z-index: 10000;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    .login-form {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 30px;
+      border-radius: 10px;
+      backdrop-filter: blur(10px);
+    }
+    .boot-animation {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #000;
+      z-index: 10001;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    .boot-logo {
+      width: 100px;
+      height: 100px;
+      margin-bottom: 20px;
+      animation: pulse 2s infinite;
+    }
+    .boot-progress {
+      width: 200px;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .boot-progress-bar {
+      height: 100%;
+      background: #E95420;
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+    @keyframes pulse {
+      0% { opacity: 0.5; }
+      50% { opacity: 1; }
+      100% { opacity: 0.5; }
+    }
+    @media (max-width: 640px) {
+      #sidebar {
+        position: fixed;
+        z-index: 20;
+        transform: translateX(-100%);
+      }
+      #sidebar.open {
+        transform: translateX(0);
+      }
+      main {
+        margin-left: 0;
+      }
+      .taskbar {
+        left: 0;
+      }
+    }
+  </style>
 </head>
 <body class="min-h-screen text-white">
   <!-- Boot Animation -->
@@ -57,11 +317,52 @@
   <div id="about-icon" class="draggable window rounded-lg p-2 text-center" style="top: 20px; left: 20px;">
     <a href="#about" class="desktop-icon"><svg class="w-8 h-8 mx-auto" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg><p class="text-sm text-gray-300">About Me</p></a>
   </div>
-  <!-- Other desktop icons... -->
+  <div id="youtube-icon" class="draggable window rounded-lg p-2 text-center" style="top: 20px; left: 100px;">
+    <a href="#youtube" class="desktop-icon"><img src="https://www.youtube.com/favicon.ico" alt="YouTube" class="w-8 h-8 mx-auto" /><p class="text-sm text-gray-300">YouTube</p></a>
+  </div>
+  <div id="spotify-icon" class="draggable window rounded-lg p-2 text-center" style="top: 20px; left: 180px;">
+    <a href="#spotify" class="desktop-icon"><img src="https://open.spotify.com/favicon.ico" alt="Spotify" class="w-8 h-8 mx-auto" /><p class="text-sm text-gray-300">Spotify</p></a>
+  </div>
+  <div id="google-icon" class="draggable window rounded-lg p-2 text-center" style="top: 100px; left: 20px;">
+    <a href="#google" class="desktop-icon"><img src="https://www.google.com/favicon.ico" alt="Google" class="w-8 h-8 mx-auto" /><p class="text-sm text-gray-300">Google</p></a>
+  </div>
+  <div id="calculator-icon" class="draggable window rounded-lg p-2 text-center" style="top: 100px; left: 100px;">
+    <a href="#calculator" class="desktop-icon"><svg class="w-8 h-8 mx-auto" fill="currentColor" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 16h-4v-2h4v2zm0-4h-4v-2h4v2zm-6 4H7v-2h4v2zm0-4H7v-2h4v2zm6-4H7V7h10v4z"/></svg><p class="text-sm text-gray-300">Calculator</p></a>
+  </div>
+  <div id="contact-icon" class="draggable window rounded-lg p-2 text-center" style="top: 100px; left: 180px;">
+    <a href="#contact" class="desktop-icon"><svg class="w-8 h-8 mx-auto" fill="currentColor" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H4V8l8 5 8-5v10zm-8-7L4 6h16l-8 5z"/></svg><p class="text-sm text-gray-300">Contact</p></a>
+  </div>
+  <div id="explorer-icon" class="draggable window rounded-lg p-2 text-center" style="top: 180px; left: 20px;">
+    <a href="#explorer" class="desktop-icon"><svg class="w-8 h-8 mx-auto" fill="currentColor" viewBox="0 0 24 24"><path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg><p class="text-sm text-gray-300">File Explorer</p></a>
+  </div>
+  <div id="terminal-icon" class="draggable window rounded-lg p-2 text-center" style="top: 180px; left: 100px;">
+    <a href="#terminal" class="desktop-icon"><svg class="w-8 h-8 mx-auto" fill="currentColor" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zM4 6h16v12H4V6zm2 3v2h2V9H6zm4 0v2h2V9h-2zm4 0v2h2V9h-2z"/></svg><p class="text-sm text-gray-300">Terminal</p></a>
+  </div>
+  <div id="notes-icon" class="draggable window rounded-lg p-2 text-center" style="top: 180px; left: 180px;">
+    <a href="#notes" class="desktop-icon"><svg class="w-8 h-8 mx-auto" fill="currentColor" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zM7 12h2v5H7zm4-7h2v12h-2zm4 5h2v7h-2z"/></svg><p class="text-sm text-gray-300">Sticky Notes</p></a>
+  </div>
+  <div id="games-icon" class="draggable window rounded-lg p-2 text-center" style="top: 260px; left: 20px;">
+    <a href="#games" class="desktop-icon"><svg class="w-8 h-8 mx-auto" fill="currentColor" viewBox="0 0 24 24"><path d="M15 7.5V2H9v5.5l3 3 3-3zM7.5 9H2v6h5.5l3-3-3-3zM9 16.5V22h6v-5.5l-3-3-3 3zM16.5 9l-3 3 3 3H22V9h-5.5z"/></svg><p class="text-sm text-gray-300">Game Center</p></a>
+  </div>
+  <div id="app-store-icon" class="draggable window rounded-lg p-2 text-center" style="top: 260px; left: 100px;">
+    <a href="#app-store" class="desktop-icon"><svg class="w-8 h-8 mx-auto" fill="currentColor" viewBox="0 0 24 24"><path d="M17 18H7V6h10v1h2V3c0-1.1-.9-2-2-2H7c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2v-4h-2v1zM7 3h10v1H7V3zm10 18H7v-1h10v1zm3.38-11.38L21 11l.62-1.38L23 9l-1.38-.62L21 7l-.62 1.38L19 9z"/></svg><p class="text-sm text-gray-300">App Store</p></a>
+  </div>
 
   <!-- Taskbar -->
   <div class="taskbar fixed bottom-0 left-16 right-0 h-12 flex items-center justify-start px-4 space-x-4 z-20">
-    <!-- Taskbar items... -->
+    <div id="taskbar-about" class="hidden bg-gray-700 rounded px-2 py-1 text-sm text-orange-500 cursor-pointer" onclick="toggleWindow('about')">About Me</div>
+    <div id="taskbar-youtube" class="hidden bg-gray-700 rounded px-2 py-1 text-sm text-orange-500 cursor-pointer" onclick="toggleWindow('youtube')">YouTube</div>
+    <div id="taskbar-spotify" class="hidden bg-gray-700 rounded px-2 py-1 text-sm text-orange-500 cursor-pointer" onclick="toggleWindow('spotify')">Spotify</div>
+    <div id="taskbar-google" class="hidden bg-gray-700 rounded px-2 py-1 text-sm text-orange-500 cursor-pointer" onclick="toggleWindow('google')">Google</div>
+    <div id="taskbar-calculator" class="hidden bg-gray-700 rounded px-2 py-1 text-sm text-orange-500 cursor-pointer" onclick="toggleWindow('calculator')">Calculator</div>
+    <div id="taskbar-contact" class="hidden bg-gray-700 rounded px-2 py-1 text-sm text-orange-500 cursor-pointer" onclick="toggleWindow('contact')">Contact</div>
+    <div id="taskbar-explorer" class="hidden bg-gray-700 rounded px-2 py-1 text-sm text-orange-500 cursor-pointer" onclick="toggleWindow('explorer')">File Explorer</div>
+    <div id="taskbar-terminal" class="hidden bg-gray-700 rounded px-2 py-1 text-sm text-orange-500 cursor-pointer" onclick="toggleWindow('terminal')">Terminal</div>
+    <div id="taskbar-notes" class="hidden bg-gray-700 rounded px-2 py-1 text-sm text-orange-500 cursor-pointer" onclick="toggleWindow('notes')">Sticky Notes</div>
+    <div id="taskbar-games" class="hidden bg-gray-700 rounded px-2 py-1 text-sm text-orange-500 cursor-pointer" onclick="toggleWindow('games')">Game Center</div>
+    <div id="taskbar-app-store" class="hidden bg-gray-700 rounded px-2 py-1 text-sm text-orange-500 cursor-pointer" onclick="toggleWindow('app-store')">App Store</div>
+    <div id="internet-status" class="ml-auto bg-green-500 rounded-full w-3 h-3"></div>
+    <div id="clock" class="text-sm text-gray-300"></div>
   </div>
 
   <!-- Context Menu -->
@@ -70,61 +371,56 @@
     <div class="context-menu-item" onclick="openWallpaperMenu()">Change Wallpaper</div>
     <div class="context-menu-item" onclick="openTerminal()">Open Terminal</div>
     <div class="context-menu-item" onclick="openSystemInfo()">System Info</div>
-    <div class="context-menu-item" onclick="openThemeEditor()">Theme Editor</div>
-    <div class="context-menu-item" onclick="startBlackHole()">Create Black Hole</div>
   </div>
 
   <!-- Wallpaper Menu -->
   <div id="wallpaper-menu" class="window rounded-lg shadow-lg p-4 max-w-md w-full hidden" style="position: absolute; top: 100px; left: 100px; z-index: 100;">
-    <!-- Wallpaper menu content... -->
+    <div class="flex justify-between items-center mb-4">
+      <h1 class="text-xl font-bold text-orange-500">Wallpaper Settings</h1>
+      <div class="flex space-x-2 window-controls">
+        <button onclick="closeWindow('wallpaper-menu')" class="bg-red-500"></button>
+      </div>
+    </div>
+    <div class="grid grid-cols-3 gap-2">
+      <div class="wallpaper-option cursor-pointer" onclick="changeWallpaper('https://wallpaperaccess.com/full/154100.jpg')">
+        <img src="https://wallpaperaccess.com/full/154100.jpg" class="w-full h-20 object-cover rounded">
+      </div>
+      <div class="wallpaper-option cursor-pointer" onclick="changeWallpaper('https://wallpaperaccess.com/full/154101.jpg')">
+        <img src="https://wallpaperaccess.com/full/154101.jpg" class="w-full h-20 object-cover rounded">
+      </div>
+      <div class="wallpaper-option cursor-pointer" onclick="changeWallpaper('https://wallpaperaccess.com/full/154102.jpg')">
+        <img src="https://wallpaperaccess.com/full/154102.jpg" class="w-full h-20 object-cover rounded">
+      </div>
+      <div class="wallpaper-option cursor-pointer" onclick="changeWallpaper('https://wallpaperaccess.com/full/154103.jpg')">
+        <img src="https://wallpaperaccess.com/full/154103.jpg" class="w-full h-20 object-cover rounded">
+      </div>
+      <div class="wallpaper-option cursor-pointer" onclick="changeWallpaper('https://wallpaperaccess.com/full/154104.jpg')">
+        <img src="https://wallpaperaccess.com/full/154104.jpg" class="w-full h-20 object-cover rounded">
+      </div>
+      <div class="wallpaper-option cursor-pointer" onclick="getRandomWallpaper()">
+        <div class="w-full h-20 bg-gray-700 rounded flex items-center justify-center">
+          <span class="text-gray-300">Random</span>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- System Info Window -->
   <div id="system-info" class="window rounded-lg shadow-lg p-4 max-w-md w-full hidden" style="position: absolute; top: 100px; left: 100px; z-index: 100;">
-    <!-- System info content... -->
-  </div>
-
-  <!-- Theme Editor -->
-  <div id="theme-editor" class="window rounded-lg shadow-lg p-4 max-w-md w-full hidden" style="position: absolute; top: 100px; left: 100px; z-index: 100;">
     <div class="flex justify-between items-center mb-4">
-      <h1 class="text-xl font-bold text-orange-500">Theme Editor</h1>
+      <h1 class="text-xl font-bold text-orange-500">System Information</h1>
       <div class="flex space-x-2 window-controls">
-        <button onclick="closeWindow('theme-editor')" class="bg-red-500"></button>
+        <button onclick="closeWindow('system-info')" class="bg-red-500"></button>
       </div>
     </div>
-    <div class="space-y-4">
-      <div>
-        <label class="block text-gray-300 mb-2">Primary Color</label>
-        <input type="color" id="primary-color" value="#E95420" class="w-full">
-      </div>
-      <div>
-        <label class="block text-gray-300 mb-2">Background</label>
-        <input type="color" id="bg-color" value="#1a1a2e" class="w-full">
-      </div>
-      <div>
-        <label class="block text-gray-300 mb-2">Border Radius</label>
-        <input type="range" id="border-radius" min="0" max="20" value="8" class="w-full">
-      </div>
-      <div>
-        <label class="block text-gray-300 mb-2">Font</label>
-        <select id="font-select" class="w-full p-2 bg-gray-700 rounded text-white">
-          <option value="'Ubuntu', sans-serif">Ubuntu</option>
-          <option value="'Courier New', monospace">Courier New</option>
-          <option value="'Arial', sans-serif">Arial</option>
-        </select>
-      </div>
-      <button onclick="applyCustomTheme()" class="w-full bg-orange-500 text-white py-2 rounded hover:bg-orange-600">Apply Theme</button>
-      <button onclick="saveTheme()" class="w-full bg-gray-600 text-white py-2 rounded hover:bg-gray-700">Save as .skin</button>
-    </div>
-  </div>
-
-  <!-- Black Hole Effect -->
-  <div id="black-hole" class="fixed inset-0 z-50 hidden flex items-center justify-center">
-    <div class="absolute inset-0 bg-black opacity-70"></div>
-    <div class="relative z-10 text-center p-6">
-      <div id="black-hole-core" class="w-64 h-64 rounded-full bg-gradient-to-r from-purple-900 via-black to-purple-900 animate-pulse mx-auto mb-4"></div>
-      <p class="text-white text-xl mb-4">Gravitational anomaly detected!</p>
-      <button onclick="cancelBlackHole()" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Stabilize System</button>
+    <div class="text-sm text-gray-300">
+      <p><strong>OS:</strong> AaryanOS v1.0</p>
+      <p><strong>User:</strong> aaryan</p>
+      <p><strong>Resolution:</strong> <span id="screen-resolution"></span></p>
+      <p><strong>Browser:</strong> <span id="browser-info"></span></p>
+      <p><strong>Online:</strong> <span id="online-status">Yes</span></p>
+      <p><strong>Theme:</strong> <span id="current-theme">Dark</span></p>
+      <p><strong>Last Login:</strong> <span id="last-login"></span></p>
     </div>
   </div>
 
@@ -134,14 +430,38 @@
     <p id="achievement-text" class="text-gray-300"></p>
   </div>
 
-  <!-- Fluid Canvas -->
-  <canvas id="fluid-canvas" class="fixed top-0 left-0 w-full h-full pointer-events-none z-0"></canvas>
+  <!-- Assistant Widget -->
+  <div id="assistant-widget" class="fixed bottom-20 right-4 bg-gray-800 rounded-full w-12 h-12 flex items-center justify-center cursor-pointer z-50" onclick="toggleAssistant()">
+    <svg class="w-6 h-6 text-orange-500" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/></svg>
+  </div>
+  <div id="assistant-chat" class="window rounded-lg shadow-lg p-4 max-w-xs w-full hidden fixed bottom-24 right-4 z-50">
+    <div class="flex justify-between items-center mb-2">
+      <h3 class="text-sm font-bold text-orange-500">Assistant</h3>
+      <button onclick="toggleAssistant()" class="text-gray-300 hover:text-white">&times;</button>
+    </div>
+    <div id="assistant-messages" class="text-xs text-gray-300 mb-2 h-32 overflow-y-auto">
+      <p>Hello! I'm your assistant. How can I help you today?</p>
+    </div>
+    <input id="assistant-input" type="text" class="w-full p-2 bg-gray-700 rounded text-white text-xs" placeholder="Ask me something...">
+  </div>
 
   <!-- Main Layout -->
   <div class="flex min-h-screen">
     <!-- Sidebar -->
     <div id="sidebar" class="w-16 bg-gray-800 flex flex-col items-center py-4 space-y-6 fixed h-full z-10 sm:transform-none hidden sm:flex">
-      <!-- Sidebar icons... -->
+      <a href="#home" class="sidebar-icon text-orange-500" title="Home"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg></a>
+      <a href="#about" class="sidebar-icon text-orange-500" title="About Me"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></a>
+      <a href="#youtube" class="sidebar-icon text-orange-500" title="YouTube"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M19.615 3.184c-1.297-.15-8.305-.15-9.615 0C8.69 3.334 7.5 4.5 7.5 6v12c0 1.1 1.19 2.666 2.5 2.816 1.31.15 8.318.15 9.615 0 1.297-.15 2.5-1.316 2.5-2.816V6c0-1.5-1.203-2.666-2.5-2.816zM10 16V8l6 4-6 4z"/></svg></a>
+      <a href="#spotify" class="sidebar-icon text-orange-500" title="Spotify"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm3.61 14.81c-.18.31-.49.5-.82.5-.15 0-.3-.04-.44-.12-1.06-.62-2.38-.92-3.75-.92-1.76 0-3.37.46-4.57 1.24-.29.19-.65.21-.95.03-.31-.18-.49-.49-.49-.82 0-.39.19-.74.5-.94 1.47-.94 3.37-1.47 5.51-1.47 1.76 0 3.47.38 4.88 1.09.31.16.54.47.54.81 0 .33-.12.62-.36.83zm1.88-3.24c-.22.37-.61.61-1.02.61-.19 0-.38-.05-.56-.16-1.31-.78-2.95-1.16-4.65-1.16-2.18 0-4.18.58-5.67 1.55-.36.23-.81.26-1.18.04-.38-.22-.61-.61-.61-1.02 0-.49.24-.93.63-1.18 1.82-1.17 4.18-1.84 6.83-1.84 2.18 0 4.31.48 6.06 1.36.38.2.67.59.67 1.02 0 .41-.15.78-.45 1.02zm2.14-3.64c-.26.44-.72.72-1.2.72-.22 0-.45-.06-.66-.19-1.55-.93-3.5-1.38-5.52-1.38-2.59 0-4.98.69-6.77 1.84-.43.27-.96.31-1.4.04-.45-.26-.72-.72-.72-1.2 0-.58.28-1.1.74-1.39 2.16-1.39 4.96-2.16 8.14-2.16 2.59 0 5.12.57 7.19 1.62.45.24.79.7.79 1.2 0 .49-.18.92-.52 1.2z"/></svg></a>
+      <a href="#google" class="sidebar-icon text-orange-500" title="Google"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12.24 10.285V14.4h6.806c-.275 1.765-2.056 5.174-6.806 5.174-4.095 0-7.439-3.389-7.439-7.574s3.344-7.574 7.439-7.574c1.825 0 3.456.657 4.727 1.942l3.391-3.391C18.427 1.092 15.694 0 12.24 0 6.092 0 1.2 4.892 1.2 11.04s4.892 11.04 11.04 11.04c6.354 0 10.586-4.462 10.586-11.04 0-.735-.067-1.468-.198-2.178H12.24z"/></svg></a>
+      <a href="#calculator" class="sidebar-icon text-orange-500" title="Calculator"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 16h-4v-2h4v2zm0-4h-4v-2h4v2zm-6 4H7v-2h4v2zm0-4H7v-2h4v2zm6-4H7V7h10v4z"/></svg></a>
+      <a href="#contact" class="sidebar-icon text-orange-500" title="Contact"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H4V8l8 5 8-5v10zm-8-7L4 6h16l-8 5z"/></svg></a>
+      <a href="#explorer" class="sidebar-icon text-orange-500" title="File Explorer"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg></a>
+      <a href="#terminal" class="sidebar-icon text-orange-500" title="Terminal"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zM4 6h16v12H4V6zm2 3v2h2V9H6zm4 0v2h2V9h-2zm4 0v2h2V9h-2z"/></svg></a>
+      <a href="#notes" class="sidebar-icon text-orange-500" title="Sticky Notes"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zM7 12h2v5H7zm4-7h2v12h-2zm4 5h2v7h-2z"/></svg></a>
+      <a href="#games" class="sidebar-icon text-orange-500" title="Game Center"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M15 7.5V2H9v5.5l3 3 3-3zM7.5 9H2v6h5.5l3-3-3-3zM9 16.5V22h6v-5.5l-3-3-3 3zM16.5 9l-3 3 3 3H22V9h-5.5z"/></svg></a>
+      <a href="#app-store" class="sidebar-icon text-orange-500" title="App Store"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M17 18H7V6h10v1h2V3c0-1.1-.9-2-2-2H7c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2v-4h-2v1zM7 3h10v1H7V3zm10 18H7v-1h10v1zm3.38-11.38L21 11l.62-1.38L23 9l-1.38-.62L21 7l-.62 1.38L19 9z"/></svg></a>
+      <div id="theme-toggle" class="theme-toggle text-orange-500 mt-auto" title="Toggle Theme"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 3a9 9 0 0 0 9 9c0 4.97-4.03 9-9 9S3 16.97 3 12a9 9 0 0 0 9-9zm0 16c3.87 0 7-3.13 7-7s-3.13-7-7-7-7 3.13-7 7 3.13 7 7 7z"/></svg></div>
     </div>
 
     <!-- Main Content -->
@@ -151,14 +471,1222 @@
 
       <!-- About Me Section -->
       <section id="about" class="min-h-screen flex items-center justify-center hidden">
-        <!-- About content... -->
+        <div class="window rounded-lg shadow-lg p-4 sm:p-6 max-w-4xl w-full">
+          <div class="flex justify-between items-center mb-4">
+            <h1 class="text-xl sm:text-2xl font-bold text-orange-500">About Me</h1>
+            <div class="flex space-x-2 window-controls">
+              <button onclick="minimizeWindow('about')" class="bg-yellow-500"></button>
+              <button onclick="maximizeWindow('about')" class="bg-green-500"></button>
+              <button onclick="closeWindow('about')" class="bg-red-500"></button>
+            </div>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm sm:text-base">
+            <div>
+              <h2 class="text-lg sm:text-xl text-orange-500 mb-2">🚀 Identity</h2>
+              <p class="text-gray-300">
+                <strong>Name:</strong> Aaryan Banskota<br />
+                <strong>Role:</strong> Full-stack coder & information collector<br />
+                <strong>Primary Focus:</strong> Creative web development, UI/UX innovation, game-based experiences<br />
+                <strong>Email:</strong> mortaldemon33@gmail.com<br />
+                <strong>Passion:</strong> Creating innovative web and AI solutions.
+              </p>
+              
+              <h2 class="text-lg sm:text-xl text-orange-500 mt-4 mb-2">🧭 Next Strategic Steps</h2>
+              <ul class="text-gray-300 list-disc pl-5">
+                <li>Implement Terminal Emulator with custom commands</li>
+                <li>Add installable apps system (App Store)</li>
+                <li>Merge Game Hub into portfolio — make it gamified</li>
+                <li>Add intro boot animation sequence</li>
+                <li>Add voice-based interaction using Speech API</li>
+              </ul>
+            </div>
+            <div>
+              <h2 class="text-lg sm:text-xl text-orange-500 mb-2">🧰 Tech Stack</h2>
+              <ul class="text-gray-300 list-disc pl-5">
+                <li><strong>Frontend:</strong> HTML, CSS, Tailwind CSS, JavaScript, GSAP</li>
+                <li><strong>Backend:</strong> PHP (XAMPP), MySQL (local dev), FormSubmit</li>
+                <li><strong>Animation & UI:</strong> GSAP, Tailwind, VanillaJS, draggable/resizable UIs</li>
+                <li><strong>Game Dev:</strong> Phaser.js (2D), Roblox Studio (3D)</li>
+                <li><strong>Hosting:</strong> GitHub Pages, Local (XAMPP)</li>
+                <li><strong>Automation:</strong> PowerShell scripting with GUI + progress bar</li>
+                <li><strong>Upcoming:</strong> Web Speech API, OpenAI GPT API (for assistants)</li>
+              </ul>
+              
+              <h2 class="text-lg sm:text-xl text-orange-500 mt-4 mb-2">🌐 Major Projects</h2>
+              <ul class="text-gray-300 list-disc pl-5">
+                <li><strong>OS-Style Portfolio Website</strong> (current project)</li>
+                <li><strong>Blossom Builder (Roblox Studio):</strong> Multiplayer farming game with admin controls</li>
+                <li><strong>Monopoly Game (JS):</strong> One real user vs one AI</li>
+                <li><strong>PowerShell Automation Tool:</strong> GUI with buttons & live progress bar</li>
+                <li><strong>Galaxy Hub:</strong> Highly polished project portal site</li>
+              </ul>
+            </div>
+          </div>
+        </div>
       </section>
 
-      <!-- Other sections (YouTube, Spotify, etc.)... -->
-      
+      <!-- YouTube Section -->
+      <section id="youtube" class="min-h-screen flex items-center justify-center hidden">
+        <div class="window rounded-lg shadow-lg p-4 sm:p-6 max-w-4xl w-full">
+          <div class="flex justify-between items-center mb-4">
+            <h1 class="text-xl sm:text-2xl font-bold text-orange-500">YouTube</h1>
+            <div class="flex space-x-2 window-controls">
+              <button onclick="minimizeWindow('youtube')" class="bg-yellow-500"></button>
+              <button onclick="maximizeWindow('youtube')" class="bg-green-500"></button>
+              <button onclick="closeWindow('youtube')" class="bg-red-500"></button>
+            </div>
+          </div>
+          <iframe
+            class="app-frame"
+            src="https://www.youtube.com/embed?listType=playlist&list=PL4cUxeGkcC9gUgr39Q_yex4cEIc1N3-0D"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+          ></iframe>
+        </div>
+      </section>
+
+      <!-- Spotify Section -->
+      <section id="spotify" class="min-h-screen flex items-center justify-center hidden">
+        <div class="window rounded-lg shadow-lg p-4 sm:p-6 max-w-4xl w-full">
+          <div class="flex justify-between items-center mb-4">
+            <h1 class="text-xl sm:text-2xl font-bold text-orange-500">Spotify</h1>
+            <div class="flex space-x-2 window-controls">
+              <button onclick="minimizeWindow('spotify')" class="bg-yellow-500"></button>
+              <button onclick="maximizeWindow('spotify')" class="bg-green-500"></button>
+              <button onclick="closeWindow('spotify')" class="bg-red-500"></button>
+            </div>
+          </div>
+          <iframe
+            class="app-frame"
+            src="https://open.spotify.com/embed/playlist/37i9dQZF1DXcBWIGoYBM5M"
+            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+          ></iframe>
+        </div>
+      </section>
+
+      <!-- Google Section -->
+      <section id="google" class="min-h-screen flex items-center justify-center hidden">
+        <div class="window rounded-lg shadow-lg p-4 sm:p-6 max-w-4xl w-full">
+          <div class="flex justify-between items-center mb-4">
+            <h1 class="text-xl sm:text-2xl font-bold text-orange-500">Google Search</h1>
+            <div class="flex space-x-2 window-controls">
+              <button onclick="minimizeWindow('google')" class="bg-yellow-500"></button>
+              <button onclick="maximizeWindow('google')" class="bg-green-500"></button>
+              <button onclick="closeWindow('google')" class="bg-red-500"></button>
+            </div>
+          </div>
+          <div class="mb-4">
+            <input
+              id="google-search"
+              type="text"
+              placeholder="Search Google..."
+              class="w-full p-2 bg-gray-700 rounded text-white text-sm sm:text-base"
+            />
+            <button
+              onclick="performGoogleSearch()"
+              class="mt-2 bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600 text-sm sm:text-base"
+            >
+              Search
+            </button>
+          </div>
+          <p class="text-gray-300 text-sm">Google search will open in a new tab</p>
+        </div>
+      </section>
+
+      <!-- Calculator Section -->
+      <section id="calculator" class="min-h-screen flex items-center justify-center hidden">
+        <div class="window rounded-lg shadow-lg p-4 sm:p-6 max-w-md w-full">
+          <div class="flex justify-between items-center mb-4">
+            <h1 class="text-xl sm:text-2xl font-bold text-orange-500">Calculator</h1>
+            <div class="flex space-x-2 window-controls">
+              <button onclick="minimizeWindow('calculator')" class="bg-yellow-500"></button>
+              <button onclick="maximizeWindow('calculator')" class="bg-green-500"></button>
+              <button onclick="closeWindow('calculator')" class="bg-red-500"></button>
+            </div>
+          </div>
+          <input
+            id="calc-display"
+            type="text"
+            class="w-full p-2 mb-4 bg-gray-700 rounded text-white text-right text-sm sm:text-base"
+            readonly
+            value="0"
+          />
+          <div class="grid grid-cols-4 gap-2">
+            <button onclick="clearCalc()" class="bg-gray-600 p-2 rounded text-white hover:bg-gray-500 text-sm sm:text-base">C</button>
+            <button onclick="appendCalc('(')" class="bg-gray-600 p-2 rounded text-white hover:bg-gray-500 text-sm sm:text-base">(</button>
+            <button onclick="appendCalc(')')" class="bg-gray-600 p-2 rounded text-white hover:bg-gray-500 text-sm sm:text-base">)</button>
+            <button onclick="appendCalc('/')" class="bg-orange-500 p-2 rounded text-white hover:bg-orange-600 text-sm sm:text-base">/</button>
+            <button onclick="appendCalc('7')" class="bg-gray-600 p-2 rounded text-white hover:bg-gray-500 text-sm sm:text-base">7</button>
+            <button onclick="appendCalc('8')" class="bg-gray-600 p-2 rounded text-white hover:bg-gray-500 text-sm sm:text-base">8</button>
+            <button onclick="appendCalc('9')" class="bg-gray-600 p-2 rounded text-white hover:bg-gray-500 text-sm sm:text-base">9</button>
+            <button onclick="appendCalc('*')" class="bg-orange-500 p-2 rounded text-white hover:bg-orange-600 text-sm sm:text-base">*</button>
+            <button onclick="appendCalc('4')" class="bg-gray-600 p-2 rounded text-white hover:bg-gray-500 text-sm sm:text-base">4</button>
+            <button onclick="appendCalc('5')" class="bg-gray-600 p-2 rounded text-white hover:bg-gray-500 text-sm sm:text-base">5</button>
+            <button onclick="appendCalc('6')" class="bg-gray-600 p-2 rounded text-white hover:bg-gray-500 text-sm sm:text-base">6</button>
+            <button onclick="appendCalc('-')" class="bg-orange-500 p-2 rounded text-white hover:bg-orange-600 text-sm sm:text-base">-</button>
+            <button onclick="appendCalc('1')" class="bg-gray-600 p-2 rounded text-white hover:bg-gray-500 text-sm sm:text-base">1</button>
+            <button onclick="appendCalc('2')" class="bg-gray-600 p-2 rounded text-white hover:bg-gray-500 text-sm sm:text-base">2</button>
+            <button onclick="appendCalc('3')" class="bg-gray-600 p-2 rounded text-white hover:bg-gray-500 text-sm sm:text-base">3</button>
+            <button onclick="appendCalc('+')" class="bg-orange-500 p-2 rounded text-white hover:bg-orange-600 text-sm sm:text-base">+</button>
+            <button onclick="appendCalc('0')" class="bg-gray-600 p-2 rounded text-white hover:bg-gray-500 text-sm sm:text-base col-span-2">0</button>
+            <button onclick="appendCalc('.')" class="bg-gray-600 p-2 rounded text-white hover:bg-gray-500 text-sm sm:text-base">.</button>
+            <button onclick="calculate()" class="bg-orange-500 p-2 rounded text-white hover:bg-orange-600 text-sm sm:text-base">=</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Contact Section -->
+      <section id="contact" class="min-h-screen flex items-center justify-center hidden">
+        <div class="window rounded-lg shadow-lg p-4 sm:p-6 max-w-md w-full">
+          <div class="flex justify-between items-center mb-4">
+            <h1 class="text-xl sm:text-2xl font-bold text-orange-500">Contact Me</h1>
+            <div class="flex space-x-2 window-controls">
+              <button onclick="minimizeWindow('contact')" class="bg-yellow-500"></button>
+              <button onclick="maximizeWindow('contact')" class="bg-green-500"></button>
+              <button onclick="closeWindow('contact')" class="bg-red-500"></button>
+            </div>
+          </div>
+          <form action="https://formsubmit.co/mortaldemon33@gmail.com" method="POST" class="space-y-4">
+            <input type="hidden" name="_subject" value="New Portfolio Contact Submission">
+            <input type="hidden" name="_next" value="https://your-username.github.io/thank-you.html">
+            <input type="hidden" name="_captcha" value="false">
+            <div>
+              <label class="block text-gray-300 text-sm sm:text-base">Name</label>
+              <input
+                type="text"
+                name="name"
+                class="w-full p-2 bg-gray-700 rounded text-white text-sm sm:text-base"
+                required
+              />
+            </div>
+            <div>
+              <label class="block text-gray-300 text-sm sm:text-base">Email</label>
+              <input
+                type="email"
+                name="email"
+                class="w-full p-2 bg-gray-700 rounded text-white text-sm sm:text-base"
+                required
+              />
+            </div>
+            <div>
+              <label class="block text-gray-300 text-sm sm:text-base">Message</label>
+              <textarea
+                name="message"
+                class="w-full p-2 bg-gray-700 rounded text-white text-sm sm:text-base"
+                rows="4"
+                required
+              ></textarea>
+            </div>
+            <button
+              type="submit"
+              class="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600 text-sm sm:text-base"
+            >
+              Send
+            </button>
+          </form>
+        </div>
+      </section>
+
+      <!-- File Explorer Section -->
+      <section id="explorer" class="min-h-screen flex items-center justify-center hidden">
+        <div class="window rounded-lg shadow-lg p-4 sm:p-6 max-w-2xl w-full">
+          <div class="flex justify-between items-center mb-4">
+            <h1 class="text-xl sm:text-2xl font-bold text-orange-500">File Explorer</h1>
+            <div class="flex space-x-2 window-controls">
+              <button onclick="minimizeWindow('explorer')" class="bg-yellow-500"></button>
+              <button onclick="maximizeWindow('explorer')" class="bg-green-500"></button>
+              <button onclick="closeWindow('explorer')" class="bg-red-500"></button>
+            </div>
+          </div>
+          <div class="flex mb-4">
+            <button class="bg-gray-700 px-3 py-1 rounded-l text-sm">This PC</button>
+            <button class="bg-gray-600 px-3 py-1 text-sm">Documents</button>
+            <button class="bg-gray-600 px-3 py-1 rounded-r text-sm">Projects</button>
+          </div>
+          <div class="grid grid-cols-4 gap-2">
+            <div class="file-explorer-item" onclick="openWindow('projects')">
+              <svg class="w-12 h-12 mx-auto text-orange-500" fill="currentColor" viewBox="0 0 24 24"><path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>
+              <p class="text-center text-sm mt-1">Projects</p>
+            </div>
+            <div class="file-explorer-item" onclick="openWindow('resume')">
+              <svg class="w-12 h-12 mx-auto text-orange-500" fill="currentColor" viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zM6 20V4h7v5h5v11H6z"/></svg>
+              <p class="text-center text-sm mt-1">Resume</p>
+            </div>
+            <div class="file-explorer-item" onclick="openWindow('photos')">
+              <svg class="w-12 h-12 mx-auto text-orange-500" fill="currentColor" viewBox="0 0 24 24"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
+              <p class="text-center text-sm mt-1">Photos</p>
+            </div>
+            <div class="file-explorer-item" onclick="openWindow('logs')">
+              <svg class="w-12 h-12 mx-auto text-orange-500" fill="currentColor" viewBox="0 0 24 24"><path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/></svg>
+              <p class="text-center text-sm mt-1">System Logs</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Terminal Section -->
+      <section id="terminal" class="min-h-screen flex items-center justify-center hidden">
+        <div class="window rounded-lg shadow-lg p-4 sm:p-6 max-w-2xl w-full">
+          <div class="flex justify-between items-center mb-4">
+            <h1 class="text-xl sm:text-2xl font-bold text-orange-500">Terminal</h1>
+            <div class="flex space-x-2 window-controls">
+              <button onclick="minimizeWindow('terminal')" class="bg-yellow-500"></button>
+              <button onclick="maximizeWindow('terminal')" class="bg-green-500"></button>
+              <button onclick="closeWindow('terminal')" class="bg-red-500"></button>
+            </div>
+          </div>
+          <div class="terminal">
+            <div id="terminal-output">
+              <p>AaryanOS Terminal v1.0</p>
+              <p>Type "help" for available commands</p>
+            </div>
+            <div class="terminal-input">
+              <span class="terminal-prompt">$</span>
+              <input type="text" id="terminal-input" class="terminal-input-field" autocomplete="off" onkeydown="handleTerminalInput(event)">
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Sticky Notes Section -->
+      <section id="notes" class="min-h-screen flex items-center justify-center hidden">
+        <div class="window rounded-lg shadow-lg p-4 sm:p-6 max-w-md w-full">
+          <div class="flex justify-between items-center mb-4">
+            <h1 class="text-xl sm:text-2xl font-bold text-orange-500">Sticky Notes</h1>
+            <div class="flex space-x-2 window-controls">
+              <button onclick="minimizeWindow('notes')" class="bg-yellow-500"></button>
+              <button onclick="maximizeWindow('notes')" class="bg-green-500"></button>
+              <button onclick="closeWindow('notes')" class="bg-red-500"></button>
+            </div>
+          </div>
+          <button onclick="createNewStickyNote()" class="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600 mb-4">New Note</button>
+          <div id="sticky-notes-container"></div>
+        </div>
+      </section>
+
+      <!-- Game Center Section -->
+      <section id="games" class="min-h-screen flex items-center justify-center hidden">
+        <div class="window rounded-lg shadow-lg p-4 sm:p-6 max-w-4xl w-full">
+          <div class="flex justify-between items-center mb-4">
+            <h1 class="text-xl sm:text-2xl font-bold text-orange-500">Game Center</h1>
+            <div class="flex space-x-2 window-controls">
+              <button onclick="minimizeWindow('games')" class="bg-yellow-500"></button>
+              <button onclick="maximizeWindow('games')" class="bg-green-500"></button>
+              <button onclick="closeWindow('games')" class="bg-red-500"></button>
+            </div>
+          </div>
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+            <div class="game-item p-4 bg-gray-700 rounded cursor-pointer" onclick="startGame('snake')">
+              <svg class="w-16 h-16 mx-auto text-orange-500" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/><path d="M12 8l-4 4 4 4 4-4z"/></svg>
+              <p class="text-center mt-2">Snake</p>
+            </div>
+            <div class="game-item p-4 bg-gray-700 rounded cursor-pointer" onclick="startGame('tic-tac-toe')">
+              <svg class="w-16 h-16 mx-auto text-orange-500" fill="currentColor" viewBox="0 0 24 24"><path d="M6 6h12v12H6z"/><path d="M4 4h16v16H4z"/></svg>
+              <p class="text-center mt-2">Tic Tac Toe</p>
+            </div>
+            <div class="game-item p-4 bg-gray-700 rounded cursor-pointer" onclick="startGame('monopoly')">
+              <svg class="w-16 h-16 mx-auto text-orange-500" fill="currentColor" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14z"/><path d="M7 12h2v5H7zm4-7h2v12h-2zm4 5h2v7h-2z"/></svg>
+              <p class="text-center mt-2">Monopoly</p>
+            </div>
+          </div>
+          <div id="game-container" class="game-container mt-4 hidden"></div>
+        </div>
+      </section>
+
+      <!-- App Store Section -->
+      <section id="app-store" class="min-h-screen flex items-center justify-center hidden">
+        <div class="window rounded-lg shadow-lg p-4 sm:p-6 max-w-4xl w-full">
+          <div class="flex justify-between items-center mb-4">
+            <h1 class="text-xl sm:text-2xl font-bold text-orange-500">App Store</h1>
+            <div class="flex space-x-2 window-controls">
+              <button onclick="minimizeWindow('app-store')" class="bg-yellow-500"></button>
+              <button onclick="maximizeWindow('app-store')" class="bg-green-500"></button>
+              <button onclick="closeWindow('app-store')" class="bg-red-500"></button>
+            </div>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="app-item p-4 bg-gray-700 rounded">
+              <div class="flex items-center mb-2">
+                <svg class="w-8 h-8 mr-2 text-orange-500" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/><path d="M12 8l-4 4 4 4 4-4z"/></svg>
+                <h3 class="font-bold">2048 Game</h3>
+              </div>
+              <p class="text-sm text-gray-300 mb-3">A fun number puzzle game</p>
+              <button onclick="installApp('2048')" class="bg-orange-500 text-white px-3 py-1 rounded text-sm">Install</button>
+            </div>
+            <div class="app-item p-4 bg-gray-700 rounded">
+              <div class="flex items-center mb-2">
+                <svg class="w-8 h-8 mr-2 text-orange-500" fill="currentColor" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14z"/><path d="M7 12h2v5H7zm4-7h2v12h-2zm4 5h2v7h-2z"/></svg>
+                <h3 class="font-bold">Weather App</h3>
+              </div>
+              <p class="text-sm text-gray-300 mb-3">Check weather in your location</p>
+              <button onclick="installApp('weather')" class="bg-orange-500 text-white px-3 py-1 rounded text-sm">Install</button>
+            </div>
+            <div class="app-item p-4 bg-gray-700 rounded">
+              <div class="flex items-center mb-2">
+                <svg class="w-8 h-8 mr-2 text-orange-500" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/><path d="M12 8l-4 4 4 4 4-4z"/></svg>
+                <h3 class="font-bold">Drawing App</h3>
+              </div>
+              <p class="text-sm text-gray-300 mb-3">Simple drawing application</p>
+              <button onclick="installApp('drawing')" class="bg-orange-500 text-white px-3 py-1 rounded text-sm">Install</button>
+            </div>
+            <div class="app-item p-4 bg-gray-700 rounded">
+              <div class="flex items-center mb-2">
+                <svg class="w-8 h-8 mr-2 text-orange-500" fill="currentColor" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14z"/><path d="M7 12h2v5H7zm4-7h2v12h-2zm4 5h2v7h-2z"/></svg>
+                <h3 class="font-bold">Music Player</h3>
+              </div>
+              <p class="text-sm text-gray-300 mb-3">Play your favorite music</p>
+              <button onclick="installApp('music')" class="bg-orange-500 text-white px-3 py-1 rounded text-sm">Install</button>
+            </div>
+          </div>
+        </div>
+      </section>
     </main>
   </div>
 
-  <script src="script.js"></script>
+  <script>
+      // Boot Animation
+  document.addEventListener('DOMContentLoaded', function() {
+    let bootProgress = 0;
+    const bootInterval = setInterval(() => {
+      bootProgress += Math.random() * 20;
+      if (bootProgress > 100) bootProgress = 100;
+      document.getElementById('boot-progress-bar').style.width = `${bootProgress}%`;
+      
+      if (bootProgress >= 100) {
+        clearInterval(bootInterval);
+        setTimeout(() => {
+          document.getElementById('boot-animation').style.display = 'none';
+          document.getElementById('login-screen').style.display = 'flex';
+        }, 300);
+      }
+    }, 100);
+  });
+
+  // Login Screen
+  document.getElementById('login-btn').addEventListener('click', function() {
+    const password = document.getElementById('password').value;
+    if (password === 'aaryan' || password === '1234') {
+      document.getElementById('login-screen').style.display = 'none';
+      initializeOS();
+    } else {
+      alert('Incorrect password! Try "aaryan" or "1234" for demo purposes.');
+    }
+  });
+
+    // Initialize OS after login
+    function initializeOS() {
+      // Welcome Message Animation
+      gsap.to('#welcome-message', {
+        opacity: 0,
+        duration: 2,
+        delay: 3,
+        ease: 'power2.out',
+        onComplete: () => document.getElementById('welcome-message').style.display = 'none'
+      });
+
+      // Load saved session
+      loadSession();
+
+      // Update clock
+      updateClock();
+      setInterval(updateClock, 1000);
+
+      // Check internet status
+      updateInternetStatus();
+      setInterval(updateInternetStatus, 5000);
+
+      // Initialize assistant
+      initializeAssistant();
+
+      // Check for achievements
+      checkAchievements();
+    }
+
+    // Theme Toggle
+    document.getElementById('theme-toggle').addEventListener('click', () => {
+      if (document.body.classList.contains('light-mode')) {
+        document.body.classList.remove('light-mode');
+        document.body.classList.add('cyberpunk-mode');
+        document.getElementById('current-theme').textContent = 'Cyberpunk';
+      } else if (document.body.classList.contains('cyberpunk-mode')) {
+        document.body.classList.remove('cyberpunk-mode');
+        document.getElementById('current-theme').textContent = 'Dark';
+      } else {
+        document.body.classList.add('light-mode');
+        document.getElementById('current-theme').textContent = 'Light';
+      }
+      saveSession();
+    });
+
+    // Hamburger Menu Toggle
+    const hamburger = document.getElementById('hamburger');
+    const sidebar = document.getElementById('sidebar');
+    hamburger.addEventListener('click', () => {
+      sidebar.classList.toggle('open');
+      sidebar.classList.toggle('hidden');
+    });
+
+    // Right-click context menu
+    document.addEventListener('contextmenu', (e) => {
+      e.preventDefault();
+      const contextMenu = document.getElementById('context-menu');
+      contextMenu.style.display = 'block';
+      contextMenu.style.left = `${e.pageX}px`;
+      contextMenu.style.top = `${e.pageY}px`;
+    });
+
+    document.addEventListener('click', () => {
+      document.getElementById('context-menu').style.display = 'none';
+    });
+
+    function createNewStickyNote() {
+      const noteId = 'note-' + Date.now();
+      const note = document.createElement('div');
+      note.className = 'sticky-note window';
+      note.id = noteId;
+      note.style.left = '100px';
+      note.style.top = '100px';
+      
+      note.innerHTML = `
+        <div class="sticky-note-header">
+          <button onclick="deleteStickyNote('${noteId}')" class="text-gray-600 hover:text-gray-800">&times;</button>
+        </div>
+        <textarea placeholder="Write your note here..."></textarea>
+      `;
+      
+      document.body.appendChild(note);
+      makeDraggable(note);
+      
+      // Load saved note if exists
+      const savedNote = localStorage.getItem(noteId);
+      if (savedNote) {
+        note.querySelector('textarea').value = savedNote;
+      }
+      
+      // Save note on change
+      note.querySelector('textarea').addEventListener('input', (e) => {
+        localStorage.setItem(noteId, e.target.value);
+      });
+      
+      return note;
+    }
+
+    function deleteStickyNote(noteId) {
+      const note = document.getElementById(noteId);
+      if (note) {
+        localStorage.removeItem(noteId);
+        note.remove();
+      }
+    }
+
+    function loadStickyNotes() {
+      const notesContainer = document.getElementById('sticky-notes-container');
+      notesContainer.innerHTML = '';
+      
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key.startsWith('note-')) {
+          const note = document.createElement('div');
+          note.className = 'mb-2 p-2 bg-gray-700 rounded';
+          note.innerHTML = `
+            <p class="text-sm text-gray-300 truncate">${localStorage.getItem(key).substring(0, 50)}...</p>
+            <button onclick="openStickyNote('${key}')" class="text-xs text-orange-500 mt-1">Open</button>
+          `;
+          notesContainer.appendChild(note);
+        }
+      }
+    }
+
+    function openStickyNote(noteId) {
+      let note = document.getElementById(noteId);
+      if (!note) {
+        note = createNewStickyNote();
+        note.id = noteId;
+        const savedContent = localStorage.getItem(noteId);
+        if (savedContent) {
+          note.querySelector('textarea').value = savedContent;
+        }
+      }
+    }
+
+    function openWallpaperMenu() {
+      document.getElementById('wallpaper-menu').classList.remove('hidden');
+    }
+
+    function changeWallpaper(url) {
+      document.body.style.backgroundImage = `url('${url}')`;
+      document.getElementById('wallpaper-menu').classList.add('hidden');
+      saveSession();
+    }
+
+    function getRandomWallpaper() {
+      const wallpapers = [
+        'https://wallpaperaccess.com/full/154100.jpg',
+        'https://wallpaperaccess.com/full/154101.jpg',
+        'https://wallpaperaccess.com/full/154102.jpg',
+        'https://wallpaperaccess.com/full/154103.jpg',
+        'https://wallpaperaccess.com/full/154104.jpg'
+      ];
+      const randomWallpaper = wallpapers[Math.floor(Math.random() * wallpapers.length)];
+      changeWallpaper(randomWallpaper);
+    }
+
+    function openSystemInfo() {
+      document.getElementById('system-info').classList.remove('hidden');
+      document.getElementById('screen-resolution').textContent = `${window.innerWidth} × ${window.innerHeight}`;
+      document.getElementById('browser-info').textContent = navigator.userAgent.split(')')[0].split('(')[1];
+      document.getElementById('online-status').textContent = navigator.onLine ? 'Yes' : 'No';
+      document.getElementById('last-login').textContent = new Date().toLocaleString();
+    }
+
+    function openTerminal() {
+      openWindow('terminal');
+    }
+
+    function toggleAssistant() {
+      const assistantChat = document.getElementById('assistant-chat');
+      assistantChat.classList.toggle('hidden');
+    }
+
+    function initializeAssistant() {
+      document.getElementById('assistant-input').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+          const input = document.getElementById('assistant-input');
+          const message = input.value;
+          input.value = '';
+          
+          const output = document.getElementById('assistant-messages');
+          output.innerHTML += `<p><strong>You:</strong> ${message}</p>`;
+          
+          // Simple responses
+          let response = "I'm not sure how to help with that.";
+          if (message.toLowerCase().includes('hello') || message.toLowerCase().includes('hi')) {
+            response = "Hello! How can I help you today?";
+          } else if (message.toLowerCase().includes('theme')) {
+            response = "You can change the theme by clicking the theme toggle in the sidebar.";
+          } else if (message.toLowerCase().includes('wallpaper')) {
+            response = "Right-click on the desktop and select 'Change Wallpaper' to change the background.";
+          } else if (message.toLowerCase().includes('help')) {
+            response = "I can help with: changing themes, wallpapers, opening apps. Try asking about those!";
+          }
+          
+          setTimeout(() => {
+            output.innerHTML += `<p><strong>Assistant:</strong> ${response}</p>`;
+            output.scrollTop = output.scrollHeight;
+          }, 500);
+        }
+      });
+    }
+
+    function updateClock() {
+      const now = new Date();
+      document.getElementById('clock').textContent = now.toLocaleTimeString();
+    }
+
+    function updateInternetStatus() {
+      const status = document.getElementById('internet-status');
+      if (navigator.onLine) {
+        status.classList.remove('bg-red-500');
+        status.classList.add('bg-green-500');
+      } else {
+        status.classList.remove('bg-green-500');
+        status.classList.add('bg-red-500');
+        showOfflineAlert();
+      }
+    }
+
+    function showOfflineAlert() {
+      const alert = document.createElement('div');
+      alert.className = 'fixed top-4 right-4 bg-red-500 text-white px-4 py-2 rounded shadow-lg z-50';
+      alert.textContent = 'No internet connection';
+      document.body.appendChild(alert);
+      
+      setTimeout(() => {
+        alert.remove();
+      }, 3000);
+    }
+
+    // Window Management
+    const sections = ['about', 'youtube', 'spotify', 'google', 'calculator', 'contact', 'explorer', 'terminal', 'notes', 'games', 'app-store'];
+    
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const targetId = this.getAttribute('href').slice(1);
+        if (targetId === 'home') {
+          sections.forEach(section => {
+            const sectionEl = document.getElementById(section);
+            sectionEl.classList.add('hidden');
+            document.getElementById(`taskbar-${section}`).classList.add('hidden');
+          });
+          sidebar.classList.add('hidden');
+        } else {
+          openWindow(targetId);
+        }
+      });
+    });
+
+    function openWindow(id) {
+      sections.forEach(section => {
+        const sectionEl = document.getElementById(section);
+        const taskbarEl = document.getElementById(`taskbar-${section}`);
+        if (section === id) {
+          sectionEl.classList.remove('hidden');
+          taskbarEl.classList.remove('hidden');
+          sectionEl.scrollIntoView({ behavior: 'smooth' });
+          gsap.from(sectionEl, { opacity: 0, y: 50, duration: 0.5, ease: 'power2.out' });
+          
+          // Special cases
+          if (id === 'notes') loadStickyNotes();
+          if (id === 'terminal') document.getElementById('terminal-input').focus();
+        } else {
+          sectionEl.classList.add('hidden');
+          taskbarEl.classList.add('hidden');
+        }
+      });
+      if (window.innerWidth < 640) sidebar.classList.add('hidden');
+      
+      checkAchievements();
+      saveSession();
+    }
+
+    function minimizeWindow(id) {
+      const section = document.getElementById(id);
+      gsap.to(section, {
+        opacity: 0,
+        scale: 0,
+        duration: 0.3,
+        ease: 'power2.in',
+        onComplete: () => section.classList.add('minimized', 'hidden')
+      });
+      document.getElementById(`taskbar-${id}`).classList.remove('hidden');
+      saveSession();
+    }
+
+    function maximizeWindow(id) {
+      const section = document.getElementById(id);
+      section.classList.remove('minimized', 'hidden');
+      gsap.fromTo(section, { opacity: 0, scale: 0 }, { opacity: 1, scale: 1, duration: 0.3, ease: 'power2.out' });
+      section.scrollIntoView({ behavior: 'smooth' });
+      saveSession();
+    }
+
+    function closeWindow(id) {
+      const section = document.getElementById(id);
+      gsap.to(section, {
+        opacity: 0,
+        scale: 0,
+        duration: 0.3,
+        ease: 'power2.in',
+        onComplete: () => {
+          section.classList.add('hidden');
+          document.getElementById(`taskbar-${id}`).classList.add('hidden');
+        }
+      });
+      saveSession();
+    }
+
+    function toggleWindow(id) {
+      const section = document.getElementById(id);
+      if (section.classList.contains('minimized') || section.classList.contains('hidden')) {
+        maximizeWindow(id);
+      } else {
+        minimizeWindow(id);
+      }
+    }
+
+    // Terminal Functions
+    function handleTerminalInput(e) {
+      if (e.key === 'Enter') {
+        const input = document.getElementById('terminal-input');
+        const command = input.value.trim();
+        input.value = '';
+        
+        const output = document.getElementById('terminal-output');
+        output.innerHTML += `<p>$ ${command}</p>`;
+        
+        let response = '';
+        
+        switch (command.toLowerCase()) {
+          case 'help':
+            response = `
+              <p>Available commands:</p>
+              <p>whoami - Show user information</p>
+              <p>projects - List my projects</p>
+              <p>resume - Download my resume</p>
+              <p>clear - Clear the terminal</p>
+              <p>theme [dark/light/cyberpunk] - Change theme</p>
+              <p>help - Show this help message</p>
+            `;
+            break;
+          case 'whoami':
+            response = `
+              <p>User: Aaryan Banskota</p>
+              <p>Role: Full-stack developer</p>
+              <p>Location: [Your Location]</p>
+              <p>Email: mortaldemon33@gmail.com</p>
+            `;
+            break;
+          case 'projects':
+            response = `
+              <p>My Projects:</p>
+              <p>- OS-Style Portfolio Website</p>
+              <p>- Blossom Builder (Roblox Studio)</p>
+              <p>- Monopoly Game (JS)</p>
+              <p>- PowerShell Automation Tool</p>
+              <p>- Galaxy Hub</p>
+            `;
+            break;
+          case 'resume':
+            response = '<p>Downloading resume... (this is a demo)</p>';
+            setTimeout(() => {
+              output.innerHTML += '<p>Resume downloaded successfully!</p>';
+            }, 1000);
+            break;
+          case 'clear':
+            output.innerHTML = '';
+            return;
+          case 'theme dark':
+            document.body.classList.remove('light-mode', 'cyberpunk-mode');
+            response = '<p>Theme set to Dark</p>';
+            break;
+          case 'theme light':
+            document.body.classList.remove('cyberpunk-mode');
+            document.body.classList.add('light-mode');
+            response = '<p>Theme set to Light</p>';
+            break;
+          case 'theme cyberpunk':
+            document.body.classList.remove('light-mode');
+            document.body.classList.add('cyberpunk-mode');
+            response = '<p>Theme set to Cyberpunk</p>';
+            break;
+          default:
+            if (command.startsWith('theme ')) {
+              response = '<p>Invalid theme. Available themes: dark, light, cyberpunk</p>';
+            } else {
+              response = `<p>Command not found: ${command}. Type "help" for available commands.</p>`;
+            }
+        }
+        
+        output.innerHTML += response;
+        output.scrollTop = output.scrollHeight;
+        
+        // Check for hacker mode
+        if (command.toLowerCase() === 'sudo hack system') {
+          unlockAchievement('Terminal Hacker');
+          document.body.classList.add('cyberpunk-mode');
+        }
+      }
+    }
+
+    // Game Center Functions
+    function startGame(game) {
+      const gameContainer = document.getElementById('game-container');
+      gameContainer.innerHTML = '';
+      gameContainer.classList.remove('hidden');
+      
+      if (game === 'snake') {
+        // Snake game implementation would go here
+        gameContainer.innerHTML = `
+          <div class="flex items-center justify-center h-full">
+            <div class="text-center">
+              <h3 class="text-xl text-orange-500 mb-4">Snake Game</h3>
+              <p class="text-gray-300 mb-4">Use arrow keys to control the snake</p>
+              <canvas id="snake-game" width="300" height="300" class="bg-black mx-auto"></canvas>
+              <button onclick="document.getElementById('game-container').classList.add('hidden')" class="mt-4 bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600">Back to Games</button>
+            </div>
+          </div>
+        `;
+        
+        // Simple snake game implementation
+        const canvas = document.getElementById('snake-game');
+        const ctx = canvas.getContext('2d');
+        
+        const box = 20;
+        let snake = [{x: 9 * box, y: 10 * box}];
+        let food = {
+          x: Math.floor(Math.random() * 15) * box,
+          y: Math.floor(Math.random() * 15) * box
+        };
+        let d;
+        let score = 0;
+        
+        document.addEventListener('keydown', direction);
+        
+        function direction(event) {
+          if (event.keyCode == 37 && d != "RIGHT") d = "LEFT";
+          else if (event.keyCode == 38 && d != "DOWN") d = "UP";
+          else if (event.keyCode == 39 && d != "LEFT") d = "RIGHT";
+          else if (event.keyCode == 40 && d != "UP") d = "DOWN";
+        }
+        
+        function drawGame() {
+          ctx.fillStyle = "#000";
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          
+          for (let i = 0; i < snake.length; i++) {
+            ctx.fillStyle = i == 0 ? "green" : "white";
+            ctx.fillRect(snake[i].x, snake[i].y, box, box);
+            
+            ctx.strokeStyle = "black";
+            ctx.strokeRect(snake[i].x, snake[i].y, box, box);
+          }
+          
+          ctx.fillStyle = "red";
+          ctx.fillRect(food.x, food.y, box, box);
+          
+          let snakeX = snake[0].x;
+          let snakeY = snake[0].y;
+          
+          if (d == "LEFT") snakeX -= box;
+          if (d == "UP") snakeY -= box;
+          if (d == "RIGHT") snakeX += box;
+          if (d == "DOWN") snakeY += box;
+          
+          if (snakeX == food.x && snakeY == food.y) {
+            score++;
+            food = {
+              x: Math.floor(Math.random() * 15) * box,
+              y: Math.floor(Math.random() * 15) * box
+            };
+          } else {
+            snake.pop();
+          }
+          
+          let newHead = {
+            x: snakeX,
+            y: snakeY
+          };
+          
+          if (snakeX < 0 || snakeY < 0 || snakeX >= canvas.width || snakeY >= canvas.height || collision(newHead, snake)) {
+            clearInterval(game);
+            alert(`Game Over! Score: ${score}`);
+            document.getElementById('game-container').classList.add('hidden');
+            
+            if (score >= 10) {
+              unlockAchievement('Snake Master');
+            }
+          }
+          
+          snake.unshift(newHead);
+        }
+        
+        function collision(head, array) {
+          for (let i = 0; i < array.length; i++) {
+            if (head.x == array[i].x && head.y == array[i].y) {
+              return true;
+            }
+          }
+          return false;
+        }
+        
+        let gameInterval = setInterval(drawGame, 100);
+      } else if (game === 'tic-tac-toe') {
+        gameContainer.innerHTML = `
+          <div class="flex items-center justify-center h-full">
+            <div class="text-center">
+              <h3 class="text-xl text-orange-500 mb-4">Tic Tac Toe</h3>
+              <p class="text-gray-300 mb-4">Click on the grid to make your move</p>
+              <div id="tic-tac-toe-board" class="grid grid-cols-3 gap-1 bg-gray-600 w-48 h-48 mx-auto"></div>
+              <button onclick="document.getElementById('game-container').classList.add('hidden')" class="mt-4 bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600">Back to Games</button>
+            </div>
+          </div>
+        `;
+        
+        const board = document.getElementById('tic-tac-toe-board');
+        let currentPlayer = 'X';
+        let gameBoard = ['', '', '', '', '', '', '', '', ''];
+        
+        for (let i = 0; i < 9; i++) {
+          const cell = document.createElement('div');
+          cell.className = 'bg-gray-800 w-16 h-16 flex items-center justify-center text-2xl cursor-pointer';
+          cell.dataset.index = i;
+          cell.addEventListener('click', handleCellClick);
+          board.appendChild(cell);
+        }
+        
+        function handleCellClick(e) {
+          const index = e.target.dataset.index;
+          
+          if (gameBoard[index] === '') {
+            gameBoard[index] = currentPlayer;
+            e.target.textContent = currentPlayer;
+            
+            if (checkWinner()) {
+              setTimeout(() => {
+                alert(`${currentPlayer} wins!`);
+                document.getElementById('game-container').classList.add('hidden');
+                
+                if (currentPlayer === 'X') {
+                  unlockAchievement('Tic Tac Toe Champion');
+                }
+              }, 100);
+              return;
+            }
+            
+            if (gameBoard.every(cell => cell !== '')) {
+              setTimeout(() => {
+                alert('Draw!');
+                document.getElementById('game-container').classList.add('hidden');
+              }, 100);
+              return;
+            }
+            
+            currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+          }
+        }
+        
+        function checkWinner() {
+          const winPatterns = [
+            [0, 1, 2], [3, 4, 5], [6, 7, 8], // rows
+            [0, 3, 6], [1, 4, 7], [2, 5, 8], // columns
+            [0, 4, 8], [2, 4, 6]             // diagonals
+          ];
+          
+          return winPatterns.some(pattern => {
+            const [a, b, c] = pattern;
+            return gameBoard[a] !== '' && gameBoard[a] === gameBoard[b] && gameBoard[a] === gameBoard[c];
+          });
+        }
+      } else if (game === 'monopoly') {
+        gameContainer.innerHTML = `
+          <div class="flex items-center justify-center h-full">
+            <div class="text-center">
+              <h3 class="text-xl text-orange-500 mb-4">Monopoly</h3>
+              <p class="text-gray-300 mb-4">Coming soon!</p>
+              <button onclick="document.getElementById('game-container').classList.add('hidden')" class="mt-4 bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600">Back to Games</button>
+            </div>
+          </div>
+        `;
+      }
+    }
+
+    // App Store Functions
+    function installApp(app) {
+      alert(`${app} installed successfully! (This is a demo)`);
+      unlockAchievement('App Installer');
+    }
+
+    // Achievement System
+    const achievements = {
+      'Terminal Hacker': { unlocked: false, message: 'Used sudo to hack the system!' },
+      'Snake Master': { unlocked: false, message: 'Scored 10+ points in Snake game!' },
+      'Tic Tac Toe Champion': { unlocked: false, message: 'Won a game of Tic Tac Toe!' },
+      'App Installer': { unlocked: false, message: 'Installed an app from the App Store!' },
+      'System Explorer': { unlocked: false, message: 'Opened all system apps at least once!' }
+    };
+
+    function checkAchievements() {
+      // Check if all apps have been opened
+      const allAppsOpened = sections.every(section => {
+        return localStorage.getItem(`app-opened-${section}`) === 'true';
+      });
+      
+      if (allAppsOpened && !achievements['System Explorer'].unlocked) {
+        unlockAchievement('System Explorer');
+      }
+    }
+
+    function unlockAchievement(name) {
+      if (achievements[name] && !achievements[name].unlocked) {
+        achievements[name].unlocked = true;
+        
+        const badge = document.getElementById('achievement-badge');
+        document.getElementById('achievement-text').textContent = achievements[name].message;
+        badge.style.display = 'block';
+        
+        gsap.fromTo(badge, 
+          { scale: 0, opacity: 0 }, 
+          { scale: 1, opacity: 1, duration: 0.5, ease: 'back.out' }
+        );
+        
+        setTimeout(() => {
+          gsap.to(badge, {
+            scale: 0,
+            opacity: 0,
+            duration: 0.5,
+            delay: 2,
+            ease: 'back.in',
+            onComplete: () => badge.style.display = 'none'
+          });
+        }, 2000);
+      }
+    }
+
+    // Session Management
+    function saveSession() {
+      const session = {
+        theme: document.body.classList.contains('light-mode') ? 'light' : 
+               document.body.classList.contains('cyberpunk-mode') ? 'cyberpunk' : 'dark',
+        wallpaper: document.body.style.backgroundImage || 'url(https://wallpaperaccess.com/full/154100.jpg)',
+        openWindows: sections.filter(section => 
+          !document.getElementById(section).classList.contains('hidden') && 
+          !document.getElementById(section).classList.contains('minimized')
+        )
+      };
+      
+      localStorage.setItem('aaryanOS-session', JSON.stringify(session));
+    }
+
+    function loadSession() {
+      const session = JSON.parse(localStorage.getItem('aaryanOS-session'));
+      if (session) {
+        // Set theme
+        if (session.theme === 'light') {
+          document.body.classList.add('light-mode');
+        } else if (session.theme === 'cyberpunk') {
+          document.body.classList.add('cyberpunk-mode');
+        }
+        
+        // Set wallpaper
+        if (session.wallpaper) {
+          document.body.style.backgroundImage = session.wallpaper;
+        }
+        
+        // Open windows
+        if (session.openWindows && session.openWindows.length > 0) {
+          openWindow(session.openWindows[0]);
+        }
+      }
+    }
+
+    // Google Search
+    function performGoogleSearch() {
+      const query = document.getElementById('google-search').value;
+      if (query) {
+        window.open(`https://www.google.com/search?q=${encodeURIComponent(query)}`, '_blank');
+      }
+    }
+
+    // Calculator
+    let calcDisplay = document.getElementById('calc-display');
+    function appendCalc(value) {
+      if (calcDisplay.value === '0' && value !== '.') calcDisplay.value = '';
+      calcDisplay.value += value;
+    }
+    function clearCalc() {
+      calcDisplay.value = '0';
+    }
+    function calculate() {
+      try {
+        calcDisplay.value = eval(calcDisplay.value) || '0';
+      } catch {
+        calcDisplay.value = 'Error';
+        setTimeout(clearCalc, 1000);
+      }
+    }
+
+    // Draggable Elements
+    function makeDraggable(elem) {
+      let isDragging = false;
+      let currentX, currentY, initialX, initialY;
+      
+      elem.addEventListener('mousedown', startDragging);
+      elem.addEventListener('touchstart', startDraggingTouch);
+      document.addEventListener('mousemove', drag);
+      document.addEventListener('touchmove', dragTouch);
+      document.addEventListener('mouseup', stopDragging);
+      document.addEventListener('touchend', stopDragging);
+      
+      function startDragging(e) {
+        initialX = e.clientX - currentX;
+        initialY = e.clientY - currentY;
+        isDragging = true;
+        elem.style.zIndex = '100';
+      }
+      
+      function startDraggingTouch(e) {
+        initialX = e.touches[0].clientX - currentX;
+        initialY = e.touches[0].clientY - currentY;
+        isDragging = true;
+        elem.style.zIndex = '100';
+      }
+      
+      function drag(e) {
+        if (isDragging) {
+          e.preventDefault();
+          currentX = e.clientX - initialX;
+          currentY = e.clientY - initialY;
+          elem.style.left = `${currentX}px`;
+          elem.style.top = `${currentY}px`;
+        }
+      }
+      
+      function dragTouch(e) {
+        if (isDragging) {
+          e.preventDefault();
+          currentX = e.touches[0].clientX - initialX;
+          currentY = e.touches[0].clientY - initialY;
+          elem.style.left = `${currentX}px`;
+          elem.style.top = `${currentY}px`;
+        }
+      }
+      
+      function stopDragging() {
+        isDragging = false;
+        elem.style.zIndex = '50';
+      }
+    }
+
+    // Make all desktop icons draggable
+    document.querySelectorAll('.draggable').forEach(elem => {
+      makeDraggable(elem);
+    });
+
+    // Make all windows draggable via their title bars
+    document.querySelectorAll('.window').forEach(window => {
+      const titleBar = window.querySelector('h1') ? window.querySelector('h1').parentElement : window;
+      titleBar.style.cursor = 'move';
+      
+      let isDragging = false;
+      let offsetX, offsetY;
+      
+      titleBar.addEventListener('mousedown', (e) => {
+        if (e.target.tagName !== 'BUTTON') {
+          isDragging = true;
+          offsetX = e.clientX - window.getBoundingClientRect().left;
+          offsetY = e.clientY - window.getBoundingClientRect().top;
+          window.style.zIndex = '100';
+        }
+      });
+      
+      document.addEventListener('mousemove', (e) => {
+        if (isDragging) {
+          window.style.left = `${e.clientX - offsetX}px`;
+          window.style.top = `${e.clientY - offsetY}px`;
+        }
+      });
+      
+      document.addEventListener('mouseup', () => {
+        isDragging = false;
+        window.style.zIndex = '50';
+      });
+    });
+
+    // Hacker Mode Shortcut
+    document.addEventListener('keydown', (e) => {
+      if (e.ctrlKey && e.altKey && e.key.toLowerCase() === 'h') {
+        openWindow('terminal');
+        document.body.classList.add('cyberpunk-mode');
+        unlockAchievement('Terminal Hacker');
+      }
+    });
+
+    // Track opened apps for achievements
+    sections.forEach(section => {
+      document.getElementById(`${section}-icon`).addEventListener('click', () => {
+        localStorage.setItem(`app-opened-${section}`, 'true');
+        checkAchievements();
+      });
+      
+      const sidebarLink = document.querySelector(`a[href="#${section}"]`);
+      if (sidebarLink) {
+        sidebarLink.addEventListener('click', () => {
+          localStorage.setItem(`app-opened-${section}`, 'true');
+          checkAchievements();
+        });
+      }
+    });
+  </script>
 </body>
 </html>
