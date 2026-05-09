@@ -1,0 +1,146 @@
+.app-grid-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(30px);
+  z-index: 5000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: appGridFadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes appGridFadeIn {
+  from { opacity: 0; transform: scale(1.1); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.app-grid-content {
+  width: 100%;
+  max-width: 900px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 50px;
+  padding: 40px;
+}
+
+.search-bar {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.search-bar input {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 24px;
+  padding: 12px 30px;
+  width: 100%;
+  max-width: 500px;
+  color: white;
+  font-size: 1.1rem;
+  outline: none;
+  text-align: center;
+  transition: all 0.3s;
+}
+
+.search-bar input:focus {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: #e95420;
+  box-shadow: 0 0 0 4px rgba(233, 84, 32, 0.2);
+}
+
+.apps-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 40px;
+  width: 100%;
+  justify-items: center;
+}
+
+.app-grid-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  width: 110px;
+  transition: transform 0.2s;
+}
+
+.app-grid-item:hover {
+  transform: translateY(-10px);
+}
+
+.app-grid-icon {
+  font-size: 4rem;
+  filter: drop-shadow(0 10px 15px rgba(0,0,0,0.4));
+  transition: transform 0.2s;
+}
+
+.app-grid-item:hover .app-grid-icon {
+  transform: scale(1.1);
+}
+
+.app-grid-label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #fff;
+  text-align: center;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+
+.grid-pagination {
+  display: flex;
+  gap: 12px;
+}
+
+.grid-pagination .dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  cursor: pointer;
+}
+
+.grid-pagination .dot.active {
+  background: #fff;
+  box-shadow: 0 0 10px rgba(255,255,255,0.5);
+}
+
+/* ── Context Menu ── */
+.appgrid-context-menu {
+  position: fixed;
+  background: rgba(30, 30, 30, 0.95);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  min-width: 160px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+  z-index: 6000;
+  padding: 5px 0;
+  color: white;
+  font-size: 0.85rem;
+}
+
+.ctx-item {
+  padding: 8px 15px;
+  cursor: pointer;
+  transition: background 0.2s;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.ctx-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.ctx-item.danger {
+  color: #ff4d4d;
+}
+
+.ctx-item.danger:hover {
+  background: rgba(255, 77, 77, 0.1);
+}

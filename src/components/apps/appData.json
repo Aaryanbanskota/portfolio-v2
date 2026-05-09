@@ -1,0 +1,95 @@
+[
+  { 
+    "id": "settings", 
+    "name": "Customize", 
+    "category": "Work", 
+    "emoji": "⚙️", 
+    "description": "Change dock position and system themes.", 
+    "review": "★★★★★ - Best customization tool!",
+    "images": [] 
+  },
+  { 
+    "id": "performance", 
+    "name": "Performance", 
+    "category": "Work", 
+    "emoji": "📊", 
+    "description": "Real-time system monitoring.", 
+    "review": "★★★★☆ - Very useful.",
+    "images": [] 
+  },
+  { 
+    "id": "vault", 
+    "name": "Data Vault", 
+    "category": "Dev", 
+    "emoji": "🔐", 
+    "description": "Secure storage solution.", 
+    "review": "★★★★★ - Super secure!",
+    "images": [] 
+  },
+  { 
+    "id": "mail", 
+    "name": "Data Mail", 
+    "category": "Work", 
+    "emoji": "📧", 
+    "description": "Encrypted communication.", 
+    "review": "★★★★☆ - Simple and clean.",
+    "images": [] 
+  },
+  { 
+    "id": "vscode", 
+    "name": "VS Code", 
+    "category": "Dev", 
+    "emoji": "💙", 
+    "description": "The ultimate code editor.", 
+    "review": "★★★★★ - A must-have for developers.",
+    "images": [] 
+  },
+  {
+    "id": "tictactoe", 
+    "name": "Tic Tac Toe", 
+    "category": "Play", 
+    "emoji": "❌",
+    "description": "A fun little game.",
+    "review": "★★★☆☆ - Okay for passing time.",
+    "images": [
+      "https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+      "https://images.unsplash.com/photo-1668554245893-2430d0077217?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3"
+    ]
+  },
+  {
+    "id": "moto",
+    "name": "Moto X3M Pool Party",
+    "category": "Play",
+    "emoji": "🏍️",
+    "description": "Awesome motocross racing game with a summer pool party theme.",
+    "review": "★★★★★ - Really addicting!",
+    "images": []
+  },
+  {
+    "id": "dice",
+    "name": "Deviled Dice",
+    "category": "Play",
+    "emoji": "🎲",
+    "description": "A hellish dice building game.",
+    "review": "★★★★☆ - Great strategy game.",
+    "images": []
+  },
+  {
+    "id": "gold",
+    "name": "Gold Mine",
+    "category": "Play",
+    "emoji": "⛏️",
+    "description": "Classic gold miner action game.",
+    "review": "★★★☆☆ - Classic fun.",
+    "images": []
+  },
+  {
+    "id": "truck",
+    "name": "Endless Truck",
+    "category": "Play",
+    "emoji": "🚚",
+    "description": "Drive a monster truck as far as possible.",
+    "review": "★★★★☆ - Simple and fun.",
+    "images": []
+  }
+]

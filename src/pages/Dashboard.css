@@ -1,0 +1,70 @@
+@import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;700&display=swap');
+
+.welcome-screen {
+  position: fixed;
+  inset: 0;
+  background: #000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Source Code Pro', monospace;
+  transition: opacity 1.2s ease;
+  opacity: 1;
+  z-index: 9999;
+}
+
+.welcome-screen.fading {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.welcome-text {
+  font-size: 3rem;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 2px;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.welcome-char {
+  display: inline-block;
+  animation: popIn 0.15s ease forwards;
+}
+
+@keyframes popIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.welcome-cursor {
+  display: inline-block;
+  width: 3px;
+  height: 2.8rem;
+  background: #fff;
+  margin-left: 6px;
+  vertical-align: middle;
+  animation: blink 1s steps(2, start) infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
+.boot-line {
+  margin-top: 28px;
+  font-size: 0.85rem;
+  color: #444;
+  letter-spacing: 3px;
+  font-family: 'Source Code Pro', monospace;
+  animation: fadeIn 1s ease 0.5s both;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}

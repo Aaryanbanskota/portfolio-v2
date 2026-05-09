@@ -1,0 +1,59 @@
+.term-container {
+  height: 100%;
+  background: #300a24; /* Ubuntu Terminal Purple */
+  color: #fff;
+  font-family: 'Ubuntu Mono', 'Source Code Pro', monospace;
+  font-size: 0.95rem;
+  overflow-y: auto;
+  padding: 10px;
+  cursor: text;
+}
+
+.term-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.term-line {
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.prompt-text {
+  color: #87ff5f; /* Light Green */
+  font-weight: bold;
+  margin-right: 8px;
+}
+
+.output-text {
+  color: #e6e6e6;
+  margin: 0;
+  font-family: inherit;
+  font-size: inherit;
+  white-space: pre-wrap;
+}
+
+.error .output-text {
+  color: #ff5f5f;
+}
+
+.term-input-line {
+  display: flex;
+  align-items: center;
+}
+
+.term-input {
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-family: inherit;
+  font-size: inherit;
+  outline: none;
+  flex: 1;
+  caret-color: #fff;
+}
+
+pre {
+  margin: 0;
+}

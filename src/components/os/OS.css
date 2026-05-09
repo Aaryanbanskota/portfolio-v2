@@ -1,0 +1,34 @@
+/* ── OS Root ── */
+.os-root {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  font-family: 'Ubuntu', 'Inter', sans-serif;
+  background: #2c001e;
+  background-image: linear-gradient(135deg, #4b1a43 0%, #1a1a1a 100%);
+  user-select: none;
+  display: flex; /* Ensure layout is predictable */
+}
+
+.os-root.theme-dark {
+  background: #000;
+  background-image: radial-gradient(circle at center, #1a1a1a 0%, #000 100%);
+}
+
+.desktop-space {
+  position: absolute;
+  top: 28px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 5;
+}
+
+.app-iframe-full {
+  width: 100%;
+  height: 100%;
+  border: none;
+  background: #fff;
+}
+
+/* Dock logic is now handled entirely in Taskbar.css to avoid conflicts */

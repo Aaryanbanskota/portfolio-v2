@@ -1,0 +1,154 @@
+.vsc-root {
+  display: flex;
+  height: 100%;
+  background: #1e1e1e;
+  color: #d4d4d4;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  overflow: hidden;
+}
+
+.vsc-sidebar {
+  width: 200px;
+  background: #252526;
+  border-right: 1px solid #333;
+  display: flex;
+  flex-direction: column;
+}
+
+.vsc-sidebar-title {
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 10px;
+  color: #858585;
+}
+
+.vsc-sidebar-item {
+  padding: 4px 10px;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.vsc-sidebar-item:hover {
+  background: #2a2d2e;
+}
+
+.vsc-sidebar-item.active {
+  background: #37373d;
+}
+
+.vsc-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.vsc-tabs {
+  display: flex;
+  background: #2d2d2d;
+}
+
+.vsc-tab {
+  padding: 8px 15px;
+  background: #1e1e1e;
+  border-top: 1px solid #007acc;
+  font-size: 0.85rem;
+  color: #fff;
+}
+
+.vsc-editor {
+  flex: 1;
+  padding: 20px;
+  font-family: 'Consolas', 'Courier New', monospace;
+  font-size: 0.9rem;
+  overflow-y: auto;
+  line-height: 1.5;
+}
+
+.vsc-editor pre {
+  margin: 0;
+}
+
+.vsc-terminal {
+  height: 30%;
+  background: #1e1e1e;
+  border-top: 1px solid #333;
+  display: flex;
+  flex-direction: column;
+}
+
+.vsc-term-header {
+  padding: 5px 15px;
+  font-size: 0.75rem;
+  border-bottom: 1px solid #333;
+  color: #e7e7e7;
+}
+
+.vsc-term-body {
+  flex: 1;
+  padding: 10px;
+  font-family: 'Consolas', 'Courier New', monospace;
+  font-size: 0.85rem;
+  overflow-y: auto;
+}
+
+.vsc-term-input-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 5px;
+}
+
+.vsc-term-input-row .prompt {
+  color: #4af626;
+}
+
+.vsc-term-input-row input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-family: inherit;
+  font-size: inherit;
+  outline: none;
+}
+
+.vsc-preview-modal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80%;
+  height: 80%;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  z-index: 1000;
+  border: 1px solid #333;
+}
+
+.vsc-preview-header {
+  background: #2d2d2d;
+  color: #fff;
+  padding: 10px 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.vsc-preview-header button {
+  background: #e81123;
+  color: white;
+  border: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.vsc-preview-iframe {
+  flex: 1;
+  border: none;
+  width: 100%;
+}

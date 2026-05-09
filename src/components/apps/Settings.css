@@ -1,0 +1,27 @@
+.settings-app { display: flex; height: 100%; background: #fdfdfd; color: #333; }
+.settings-sidebar { width: 180px; background: #f4f4f4; border-right: 1px solid #ddd; padding: 20px 0; }
+.s-nav { padding: 10px 20px; font-size: 0.85rem; cursor: pointer; color: #666; }
+.s-nav.active { color: #e95420; font-weight: bold; background: #fff; border-left: 3px solid #e95420; }
+
+.settings-main { flex: 1; padding: 40px; }
+.settings-section { margin-top: 30px; }
+.settings-section h3 { font-size: 1rem; margin-bottom: 15px; color: #666; }
+
+.dock-options, .theme-options { display: flex; gap: 15px; }
+.dock-opt, .theme-opt {
+  padding: 15px 25px;
+  border: 1px solid #eee;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.dock-opt.active, .theme-opt.active {
+  border-color: #e95420;
+  background: rgba(233, 84, 32, 0.05);
+  color: #e95420;
+}
+
+.theme-opt.dark { background: #1a1a1a; color: #fff; }
+.theme-opt.ubuntu { background: #4b1a43; color: #fff; }
